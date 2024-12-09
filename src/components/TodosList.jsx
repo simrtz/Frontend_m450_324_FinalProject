@@ -1,15 +1,20 @@
 /* eslint react/prop-types: 0 */
 import TodoItem from "./TodoItem";
 
-const TodosList = (props) => (
+// TODO-SIMON: Implement conditional ordering high to low / low to high
+const priorityOrder = { HIGH: 1, MEDIUM: 2, LOW: 3 };
+
+const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem}) => (
   <ul data-set="todo-list">
-    {props.todos.map((todo) => (
+    {todos.sort((a, b) => {
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    }).map((todo) => (
       <TodoItem
         key={todo.id}
         todo={todo}
-        handleChangeProps={props.handleChangeProps}
-        deleteTodoProps={props.deleteTodoProps}
-        setUpdate={props.setUpdate}
+        handleChangeProps={handleChangeProps}
+        deleteTodoProps={deleteTodoProps}
+        updateTodoItem={updateTodoItem}
       />
     ))}
   </ul>

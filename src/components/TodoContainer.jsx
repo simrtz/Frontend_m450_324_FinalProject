@@ -6,14 +6,17 @@ import TodosList from "./TodosList";
 import styles from "./TodoContainer.module.css";
 
 const TodoContainer = () => {
-  const getInitialTodos = () => {
-    // getting stored items
-    const temp = localStorage.getItem("todos");
-    const savedTodos = JSON.parse(temp);
-    return savedTodos || [];
-  };
+  const [todos, setTodos] = useState([]);
 
-  const [todos, setTodos] = useState(getInitialTodos());
+  const fetchTodos = async () => {
+    const response = await fetch('http://localhost:8080/api/v1/todo', { method: 'GET' });
+    const data = await response.json();
+    setTodos(data);
+};
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   const handleChange = (id) => {
     setTodos((prevState) =>
@@ -29,36 +32,40 @@ const TodoContainer = () => {
     );
   };
 
-  const delTodo = (id) => {
-    setTodos([...todos.filter((todo) => todo.id !== id)]);
+  const delTodo = async(id) => {
+    await fetch(`http://localhost:8080/api/v1/todo/${id}`, { method: 'DELETE' });
+    fetchTodos();
   };
 
-  const addTodoItem = (title) => {
+  const addTodoItem = async ({title, priority}) => {
     const newTodo = {
-      id: uuidv4(),
       title,
+      priority,
       completed: false,
     };
-    setTodos([...todos, newTodo]);
+    
+    await fetch('http://localhost:8080/api/v1/todo', { 
+      method: 'POST', 
+      headers: {
+      'Content-Type': 'application/json'
+      }, 
+      body: JSON.stringify(newTodo)  
+    });
+    fetchTodos();
   };
 
-  const setUpdate = (updatedTitle, id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          todo.title = updatedTitle;
-        }
-        return todo;
-      })
-    );
+  const updateTodoItem = async (updatedTodo) => {
+    await fetch(`http://localhost:8080/api/v1/todo/${updatedTodo.id}`, 
+      {
+        method: 'PUT', 
+        headers: {
+        'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify(updatedTodo)
+      }
+  );
+    fetchTodos();
   };
-
-  // componentDidUpdate
-  useEffect(() => {
-    // storing todos items
-    const temp = JSON.stringify(todos);
-    localStorage.setItem("todos", temp);
-  }, [todos]);
 
   return (
     <div className={styles.inner}>
@@ -68,7 +75,7 @@ const TodoContainer = () => {
         todos={todos}
         handleChangeProps={handleChange}
         deleteTodoProps={delTodo}
-        setUpdate={setUpdate}
+        updateTodoItem={updateTodoItem}
       />
     </div>
   );
