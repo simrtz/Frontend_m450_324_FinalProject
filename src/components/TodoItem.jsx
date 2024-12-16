@@ -16,6 +16,12 @@ const TodoItem = (props) => {
     }
   };
 
+  const handlePriorityChange = (event) => {
+    if (event.key === "Enter") {
+      setEditing(false);
+    }
+  };
+
   const completedStyle = {
     fontStyle: "italic",
     color: "#595959",
@@ -23,7 +29,7 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title } = props.todo;
+  const { completed, id, title, priority } = props.todo;
 
   const viewMode = {};
   const editMode = {};
@@ -58,6 +64,11 @@ const TodoItem = (props) => {
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
         <span style={completed ? completedStyle : null}>{title}</span>
+        <select style={{marginLeft: "5rem"}} name="priority" value={priority} onChange={(e) => {props.updateTodoItem({...props.todo, priority: e.target.value})}}>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
       </div>
       <input
         type="text"
@@ -65,7 +76,7 @@ const TodoItem = (props) => {
         className={styles.textInput}
         value={title}
         onChange={(e) => {
-          props.setUpdate(e.target.value, id);
+          props.updateTodoItem(e.target.value, id);
         }}
         onKeyDown={handleUpdatedDone}
       />
