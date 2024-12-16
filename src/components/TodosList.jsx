@@ -1,6 +1,7 @@
 /* eslint react/prop-types: 0 */
 import TodoItem from "./TodoItem";
 import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
 
 // TODO-SIMON: Implement conditional ordering high to low / low to high
 const priorityOrder = { HIGH: 1, MEDIUM: 2, LOW: 3 };

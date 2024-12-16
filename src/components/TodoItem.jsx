@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
 import styles from "./TodoItem.module.css";
+import DatePicker from "react-datepicker";
 
 const TodoItem = (props) => {
   const [editing, setEditing] = useState(false);
@@ -29,7 +30,7 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, priority } = props.todo;
+  const { completed, id, title, priority, dueDate } = props.todo;
 
   const viewMode = {};
   const editMode = {};
@@ -79,6 +80,16 @@ const TodoItem = (props) => {
           props.updateTodoItem(e.target.value, id);
         }}
         onKeyDown={handleUpdatedDone}
+      />
+      <DatePicker
+          selected={dueDate ? new Date(dueDate) : null}
+          onChange={(date) => { props.updateTodoItem({ ...props.todo, dueDate: date }); }}
+          locale="de"
+          showTimeSelect
+          timeFormat="HH:mm"
+          dateFormat="dd.MM.yyyy HH:mm"
+          placeholderText="Kein Zeitpunkt ausgewählt"
+          className="input-text"
       />
     </li>
   );

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 import Header from "./Header";
 import InputTodo from "./InputTodo";
 import TodosList from "./TodosList";
@@ -37,11 +36,12 @@ const TodoContainer = () => {
     fetchTodos();
   };
 
-  const addTodoItem = async ({title, priority}) => {
+  const addTodoItem = async ({title, priority, dueDate}) => {
     const newTodo = {
       title,
       priority,
       completed: false,
+      dueDate
     };
     
     await fetch('http://localhost:8080/api/v1/todo', { 
