@@ -26,6 +26,7 @@ describe("todo tests", () => {
       .should("exist")
       .should("not.be.checked");
     // you can also use should have class completed to check if the todo is completed
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
     cy.get('[data-set="todo-list"] input[type ="checkbox"]')
       .should("exist")
       .click()
