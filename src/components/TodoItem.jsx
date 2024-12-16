@@ -5,18 +5,13 @@ import styles from "./TodoItem.module.css";
 
 const TodoItem = (props) => {
   const [editing, setEditing] = useState(false);
+  const [customCategory, setCustomCategory] = useState("")
 
   const handleEditing = () => {
     setEditing(true);
   };
 
   const handleUpdatedDone = (event) => {
-    if (event.key === "Enter") {
-      setEditing(false);
-    }
-  };
-
-  const handlePriorityChange = (event) => {
     if (event.key === "Enter") {
       setEditing(false);
     }
@@ -29,7 +24,8 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, priority } = props.todo;
+  const { completed, id, title, priority, category } = props.todo;
+  const { categories } = props;
 
   const viewMode = {};
   const editMode = {};
@@ -38,6 +34,19 @@ const TodoItem = (props) => {
     viewMode.display = "none";
   } else {
     editMode.display = "none";
+  }
+
+  const onChangeCustomCategory = (e) => {
+    setCustomCategory(e.target.value);
+  };
+
+  const onConfirmCustomCategory = (e) => {
+    if (customCategory === "") {
+      return;
+    }
+    
+    props.setCategories(prev => [...prev, customCategory])
+    props.updateTodoItem({...props.todo, category: customCategory})
   }
 
   useEffect(
@@ -64,6 +73,24 @@ const TodoItem = (props) => {
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
         <span style={completed ? completedStyle : null}>{title}</span>
+        <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {category !== "Custom" && props.updateTodoItem({...props.todo, category: e.target.value})}}>
+          {categories.map(category => {
+            return <option value={category}>{category}</option>
+          })}
+        </select>
+        {category === "Custom" && 
+        <div>
+          <input
+            type="text"
+            className="input-text"
+            placeholder="New Category..."
+            value={customCategory}
+            name="category"
+            onChange={onChangeCustomCategory}
+          />
+          <button onClick={() => onConfirmCustomCategory()}>Confirm</button>
+        </div>
+        }
         <select style={{marginLeft: "5rem"}} name="priority" value={priority} onChange={(e) => {props.updateTodoItem({...props.todo, priority: e.target.value})}}>
           <option value="LOW">Low</option>
           <option value="MEDIUM">Medium</option>
@@ -82,6 +109,6 @@ const TodoItem = (props) => {
       />
     </li>
   );
-};
+}
 
 export default TodoItem;

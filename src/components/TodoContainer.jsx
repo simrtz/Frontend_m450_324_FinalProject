@@ -7,16 +7,30 @@ import styles from "./TodoContainer.module.css";
 
 const TodoContainer = () => {
   const [todos, setTodos] = useState([]);
+  const [categories, setCategories] = useState([
+    "Work",
+    "Private",
+    "Groceries",
+    "Custom"
+]);
 
-  const fetchTodos = async () => {
+  const fetchTodos = async (firstRun) => {
     const response = await fetch('http://localhost:8080/api/v1/todo', { method: 'GET' });
     const data = await response.json();
     setTodos(data);
+
+    if(firstRun) {
+      setCategories(
+        categories.concat(data.map((todo) => {
+          return todo.category;
+        })) 
+      )
+    }
 };
 
   useEffect(() => {
-    fetchTodos();
-  }, []);
+    fetchTodos(true);
+  },[]);
 
   const handleChange = (id) => {
     setTodos((prevState) =>
@@ -37,10 +51,11 @@ const TodoContainer = () => {
     fetchTodos();
   };
 
-  const addTodoItem = async ({title, priority}) => {
+  const addTodoItem = async ({title, priority, category}) => {
     const newTodo = {
       title,
       priority,
+      category,
       completed: false,
     };
     
@@ -70,12 +85,14 @@ const TodoContainer = () => {
   return (
     <div className={styles.inner}>
       <Header />
-      <InputTodo addTodoProps={addTodoItem} />
+      <InputTodo addTodoProps={addTodoItem} categories={categories} setCategories={setCategories} />
       <TodosList
         todos={todos}
         handleChangeProps={handleChange}
         deleteTodoProps={delTodo}
         updateTodoItem={updateTodoItem}
+        categories={categories}
+        setCategories={setCategories}
       />
     </div>
   );
