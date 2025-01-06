@@ -48,20 +48,12 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
     </div>
     <ul data-set="todo-list">
       {todos.sort((a, b) => {
-        if(order === "byCategory") {
-          if (a.category === category && b.category !== category) {
-            return -1; 
-        } else if (b.category === category && a.category !== category) {
-            return 1;
-        } else {
-            return 0; 
-        } 
-      }
-
-        return order === "highToLow"
-        ?  priorityOrder[a.priority] - priorityOrder[b.priority]
-        :  priorityOrder[b.priority] - priorityOrder[a.priority];
-      }).map((todo) => (
+        if (order === "highToLow") {
+          return priorityOrder[a.priority] - priorityOrder[b.priority];
+        } else if(order === "lowToHigh") {
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }
+      }).map((todo) => { return (order !== "byCategory" || todo.category === category) && (
         <TodoItem
           key={todo.id}
           todo={todo}
@@ -71,7 +63,7 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
           categories={categories}
           setCategories={setCategories}
         />
-      ))}
+      )})}
     </ul>
   </div>
 )};
