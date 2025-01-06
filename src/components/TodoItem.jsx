@@ -5,7 +5,13 @@ import styles from "./TodoItem.module.css";
 import DatePicker from "react-datepicker";
 
 const TodoItem = (props) => {
+  const { completed, id, title, priority, dueDate } = props.todo;
+
   const [editing, setEditing] = useState(false);
+
+  // Berechne, ob das Due-Date in den nächsten 24 Stunden ist
+  const isDueSoon = dueDate && new Date(dueDate) - new Date() <= 24 * 60 * 60 * 1000;
+  const dueSoonStyle = isDueSoon && !completed ? { border: "2px solid red" } : {};
 
   const handleEditing = () => {
     setEditing(true);
@@ -30,8 +36,6 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, priority, dueDate } = props.todo;
-
   const viewMode = {};
   const editMode = {};
 
@@ -49,49 +53,47 @@ const TodoItem = (props) => {
   );
 
   return (
-    <li className={styles.item} data-type="todo-item">
-      <div onDoubleClick={handleEditing} style={viewMode}>
+      <li className={styles.item} data-type="todo-item" style={dueSoonStyle}>
+        <div onDoubleClick={handleEditing} style={viewMode}>
+          <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={completed}
+              onChange={() => props.handleChangeProps(id)}
+              name="checkbox"
+          />
+          <button
+              data-set="delete-todo-btn"
+              onClick={() => props.deleteTodoProps(id)}
+          >
+            <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
+          </button>
+          <span style={completed ? completedStyle : null}>{title}</span>
+          <select style={{ marginLeft: "5rem" }} name="priority" value={priority} onChange={(e) => { props.updateTodoItem({ ...props.todo, priority: e.target.value }) }}>
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+          </select>
+        </div>
         <input
-          type="checkbox"
-          className={styles.checkbox}
-          checked={completed}
-          onChange={() => props.handleChangeProps(id)}
-          name="checkbox"
+            type="text"
+            style={editMode}
+            className={styles.textInput}
+            value={title}
+            onChange={(e) => { props.updateTodoItem(e.target.value, id); }}
+            onKeyDown={handleUpdatedDone}
         />
-        <button
-          data-set="delete-todo-btn"
-          onClick={() => props.deleteTodoProps(id)}
-        >
-          <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
-        </button>
-        <span style={completed ? completedStyle : null}>{title}</span>
-        <select style={{marginLeft: "5rem"}} name="priority" value={priority} onChange={(e) => {props.updateTodoItem({...props.todo, priority: e.target.value})}}>
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
-      </div>
-      <input
-        type="text"
-        style={editMode}
-        className={styles.textInput}
-        value={title}
-        onChange={(e) => {
-          props.updateTodoItem(e.target.value, id);
-        }}
-        onKeyDown={handleUpdatedDone}
-      />
-      <DatePicker
-          selected={dueDate ? new Date(dueDate) : null}
-          onChange={(date) => { props.updateTodoItem({ ...props.todo, dueDate: date }); }}
-          locale="de"
-          showTimeSelect
-          timeFormat="HH:mm"
-          dateFormat="dd.MM.yyyy HH:mm"
-          placeholderText="Kein Zeitpunkt ausgewählt"
-          className="input-text"
-      />
-    </li>
+        <DatePicker
+            selected={dueDate ? new Date(dueDate) : null}
+            onChange={(date) => { props.updateTodoItem({ ...props.todo, dueDate: date }); }}
+            locale="de"
+            showTimeSelect
+            timeFormat="HH:mm"
+            dateFormat="dd.MM.yyyy HH:mm"
+            placeholderText="Kein Zeitpunkt ausgewählt"
+            className="input-text"
+        />
+      </li>
   );
 };
 
