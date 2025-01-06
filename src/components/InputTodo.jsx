@@ -18,6 +18,15 @@ const InputTodo = ({addTodoProps}) => {
       [e.target.name]: e.target.value,
     });
   };
+  const handleDateChange = (date) => {
+    if (date) {
+      // +1 Stunde hinzufügen
+      const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+      setInput({ ...input, dueDate: adjustedDate });
+    } else {
+      setInput({ ...input, dueDate: null });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,10 +63,8 @@ const InputTodo = ({addTodoProps}) => {
       </select>
       <DatePicker
           selected={input.dueDate}
-          onChange={(date) => setInput({ ...input, dueDate: date })}
-          locale="de"
+          onChange={handleDateChange}
           showTimeSelect
-          timeFormat="HH:mm"
           dateFormat="dd.MM.yyyy HH:mm"
           placeholderText="Datum auswählen"
           showIcon={true}

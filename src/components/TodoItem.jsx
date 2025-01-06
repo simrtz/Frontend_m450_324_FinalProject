@@ -29,6 +29,16 @@ const TodoItem = (props) => {
     }
   };
 
+  const handleDateChange = (date) => {
+    if (date) {
+      // +1 Stunde hinzufügen
+      const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+      props.updateTodoItem({ ...props.todo, dueDate: adjustedDate });
+    } else {
+      props.updateTodoItem({ ...props.todo, dueDate: null });
+    }
+  };
+
   const completedStyle = {
     fontStyle: "italic",
     color: "#595959",
@@ -85,10 +95,8 @@ const TodoItem = (props) => {
         />
         <DatePicker
             selected={dueDate ? new Date(dueDate) : null}
-            onChange={(date) => { props.updateTodoItem({ ...props.todo, dueDate: date }); }}
-            locale="de"
+            onChange={handleDateChange}
             showTimeSelect
-            timeFormat="HH:mm"
             dateFormat="dd.MM.yyyy HH:mm"
             placeholderText="Kein Zeitpunkt ausgewählt"
             className="input-text"
