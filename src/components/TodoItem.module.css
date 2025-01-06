@@ -27,3 +27,16 @@
   padding: 10px;
   border: 1px solid #dfdfdf;
 }
+
+/* Standard-Style für Todo-Elemente */
+.item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* Rote Umrandung, wenn die Aufgabe innerhalb von 24 Stunden fällig ist */
+.dueSoon {
+  border: 2px solid red;
+}
