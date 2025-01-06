@@ -1,12 +1,16 @@
 /* eslint react/prop-types: 0 */
 import { useState, useEffect } from "react";
 import { FaPlusCircle } from "react-icons/fa";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const InputTodo = ({addTodoProps, categories, setCategories}) => {
   const [input, setInput] = useState({
     title: "",
     priority: "LOW",
-    category: "Work"
+    category: "Work",
+    dueDate: null,
   });
 
   const [customCategory, setCustomCategory] = useState("")
@@ -20,6 +24,15 @@ const InputTodo = ({addTodoProps, categories, setCategories}) => {
       ...input,
       [e.target.name]: e.target.value,
     });
+  };
+  const handleDateChange = (date) => {
+    if (date) {
+      // +1 Stunde hinzufügen
+      const adjustedDate = new Date(date.getTime() + 60 * 60 * 1000);
+      setInput({ ...input, dueDate: adjustedDate });
+    } else {
+      setInput({ ...input, dueDate: null });
+    }
   };
 
   const onChangeCustomCategory = (e) => {
@@ -41,11 +54,12 @@ const InputTodo = ({addTodoProps, categories, setCategories}) => {
         category = customCategory
       }
 
-      addTodoProps({title: input.title, priority: input.priority, category});
+      addTodoProps({title: input.title, priority: input.priority, category, dueDate: input.dueDate});
       setInput({
         title: "",
         priority: "LOW",
-        category
+        category,
+        dueDate: null,
       });
     } else {
       alert("Please write item");
@@ -84,6 +98,14 @@ const InputTodo = ({addTodoProps, categories, setCategories}) => {
         <option value="MEDIUM">Medium</option>
         <option value="HIGH">High</option>
       </select>
+      <DatePicker
+          selected={input.dueDate}
+          onChange={handleDateChange}
+          showTimeSelect
+          dateFormat="dd.MM.yyyy HH:mm"
+          placeholderText="Datum auswählen"
+          showIcon={true}
+      />
       <button data-set="add-todo-btn" className="input-submit">
         <FaPlusCircle />
       </button>
