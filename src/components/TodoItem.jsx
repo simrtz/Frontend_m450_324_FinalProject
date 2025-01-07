@@ -5,7 +5,7 @@ import styles from "./TodoItem.module.css";
 import DatePicker from "react-datepicker";
 
 const TodoItem = (props) => {
-  const { completed, id, title, priority, dueDate } = props.todo;
+  const { completed, id, title, priority, dueDate, category } = props.todo;
 
   const [editing, setEditing] = useState(false);
   const [customCategory, setCustomCategory] = useState("")
@@ -46,7 +46,6 @@ const TodoItem = (props) => {
     textDecoration: "line-through",
   };
 
-  const { completed, id, title, priority, category } = props.todo;
   const { categories } = props;
 
   const viewMode = {};
@@ -121,7 +120,7 @@ const TodoItem = (props) => {
           data-set="delete-todo-btn"
           onClick={() => props.deleteTodoProps(id)}
         >
-          <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
+        <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
         <span style={completed ? completedStyle : null}>{title}</span>
         <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {category !== "Custom" && props.updateTodoItem({...props.todo, category: e.target.value})}}>
@@ -147,7 +146,6 @@ const TodoItem = (props) => {
           <option value="MEDIUM">Medium</option>
           <option value="HIGH">High</option>
         </select>
-      </div>
       <input
         type="text"
         style={editMode}
