@@ -78,35 +78,67 @@ const TodoItem = (props) => {
   );
 
   return (
-      <li className={styles.item} data-type="todo-item" style={dueSoonStyle}>
-        <div onDoubleClick={handleEditing} style={viewMode}>
-          <input
-              type="checkbox"
-              className={styles.checkbox}
-              checked={completed}
-              onChange={() => props.handleChangeProps(id)}
-              name="checkbox"
-          />
-          <button
-              data-set="delete-todo-btn"
-              onClick={() => props.deleteTodoProps(id)}
-          >
-            <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
-          </button>
-          <span style={completed ? completedStyle : null}>{title}</span>
-          <select style={{ marginLeft: "5rem" }} name="priority" value={priority} onChange={(e) => { props.updateTodoItem({ ...props.todo, priority: e.target.value }) }}>
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-          </select>
-        </div>
+    <li className={styles.item} data-type="todo-item" style={dueSoonStyle}>
+      <div onDoubleClick={handleEditing} style={viewMode}>
+        <span style={completed ? completedStyle : null}>{title}</span>
         <input
             type="text"
             style={editMode}
             className={styles.textInput}
             value={title}
-            onChange={(e) => { props.updateTodoItem(e.target.value, id); }}
+            onChange={(e) => {
+              props.updateTodoItem(e.target.value, id);
+            }}
             onKeyDown={handleUpdatedDone}
+        />   
+        <input
+            type="checkbox"
+            className={styles.checkbox}
+            checked={completed}
+            onChange={() => props.handleChangeProps(id)}
+            name="checkbox"
+        />
+        <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {category !== "Custom" && props.updateTodoItem({...props.todo, category: e.target.value})}}>
+          {categories.map(category => {
+            return <option value={category}>{category}</option>
+          })}
+        </select>
+        {category === "Custom" && 
+          <div>
+            <input
+              type="text"
+              className="input-text"
+              placeholder="New Category..."
+              value={customCategory}
+              name="category"
+              onChange={onChangeCustomCategory}
+            />
+            <button onClick={() => onConfirmCustomCategory()}>Confirm</button>
+          </div>
+        }
+        <select style={{marginLeft: "5rem"}} name="priority" value={priority} onChange={(e) => {props.updateTodoItem({...props.todo, priority: e.target.value})}}>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+        <button
+            data-set="delete-todo-btn"
+            onClick={() => props.deleteTodoProps(id)}
+        >
+          <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
+        </button>
+        <select style={{ marginLeft: "5rem" }} name="priority" value={priority} onChange={(e) => { props.updateTodoItem({ ...props.todo, priority: e.target.value }) }}>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+        <input
+          type="text"
+          style={editMode}
+          className={styles.textInput}
+          value={title}
+          onChange={(e) => { props.updateTodoItem(e.target.value, id); }}
+          onKeyDown={handleUpdatedDone}
         />
         <DatePicker
             selected={dueDate ? new Date(dueDate) : null}
@@ -116,54 +148,7 @@ const TodoItem = (props) => {
             placeholderText="Kein Zeitpunkt ausgewählt"
             className="input-text"
         />
-        <button
-          data-set="delete-todo-btn"
-          onClick={() => props.deleteTodoProps(id)}
-        >
-        <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
-        </button>
-        <span style={completed ? completedStyle : null}>{title}</span>
-        <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {category !== "Custom" && props.updateTodoItem({...props.todo, category: e.target.value})}}>
-          {categories.map(category => {
-            return <option value={category}>{category}</option>
-          })}
-        </select>
-        {category === "Custom" && 
-        <div>
-          <input
-            type="text"
-            className="input-text"
-            placeholder="New Category..."
-            value={customCategory}
-            name="category"
-            onChange={onChangeCustomCategory}
-          />
-          <button onClick={() => onConfirmCustomCategory()}>Confirm</button>
-        </div>
-        }
-        <select style={{marginLeft: "5rem"}} name="priority" value={priority} onChange={(e) => {props.updateTodoItem({...props.todo, priority: e.target.value})}}>
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
-      <input
-        type="text"
-        style={editMode}
-        className={styles.textInput}
-        value={title}
-        onChange={(e) => {
-          props.updateTodoItem(e.target.value, id);
-        }}
-        onKeyDown={handleUpdatedDone}
-      />        
-      <DatePicker
-        selected={dueDate ? new Date(dueDate) : null}
-        onChange={handleDateChange}
-        showTimeSelect
-        dateFormat="dd.MM.yyyy HH:mm"
-        placeholderText="Kein Zeitpunkt ausgewählt"
-        className="input-text"
-      />
+      </div>
     </li>
   );
 }
