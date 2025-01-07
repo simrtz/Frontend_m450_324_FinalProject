@@ -39,6 +39,15 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
         onChange={event => setOrder(event.target.value)}
       />
       By Category
+      <input
+        style={{marginLeft: "15px"}}
+        type="radio"
+        name="OrderByDueDate"
+        value="byDueDate"
+        checked={order === "byDueDate"}
+        onChange={event => setOrder(event.target.value)}
+      />
+      By Due Date
       {order === "byCategory" && 
       <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {setCategory(e.target.value)}}>
         {categories.map(category => {
@@ -53,6 +62,8 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
           return priorityOrder[a.priority] - priorityOrder[b.priority];
         } else if(order === "lowToHigh") {
           return priorityOrder[b.priority] - priorityOrder[a.priority];
+        } else if (order === "byDueDate") {
+          return new Date(a.dueDate) - new Date(b.dueDate);
         }
       }).map((todo) => { return (order !== "byCategory" || todo.category === category) && (
         <TodoItem
