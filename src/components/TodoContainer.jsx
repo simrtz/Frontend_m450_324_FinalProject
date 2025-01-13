@@ -20,9 +20,9 @@ const TodoContainer = () => {
 
     if(firstRun) {
       setCategories(
-        categories.concat(data.map((todo) => {
-          return todo.category;
-        })) 
+        categories.concat(
+          data.filter((todo) => !categories.includes(todo.category))
+          .map((todo) => todo.category)) 
       )
     }
 };

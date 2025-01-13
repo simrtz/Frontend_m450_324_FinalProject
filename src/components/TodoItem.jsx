@@ -7,28 +7,11 @@ import DatePicker from "react-datepicker";
 const TodoItem = (props) => {
   const { completed, id, title, priority, dueDate, category } = props.todo;
 
-  const [editing, setEditing] = useState(false);
   const [customCategory, setCustomCategory] = useState("")
 
   // Berechne, ob das Due-Date in den nächsten 24 Stunden ist
   const isDueSoon = dueDate && new Date(dueDate) - new Date() <= 24 * 60 * 60 * 1000;
   const dueSoonStyle = isDueSoon && !completed ? { border: "2px solid red" } : {};
-
-  const handleEditing = () => {
-    setEditing(true);
-  };
-
-  const handleUpdatedDone = (event) => {
-    if (event.key === "Enter") {
-      setEditing(false);
-    }
-  };
-
-  const handlePriorityChange = (event) => {
-    if (event.key === "Enter") {
-      setEditing(false);
-    }
-  };
 
   const handleDateChange = (date) => {
     if (date) {
@@ -47,15 +30,6 @@ const TodoItem = (props) => {
   };
 
   const { categories } = props;
-
-  const viewMode = {};
-  const editMode = {};
-
-  if (editing) {
-    viewMode.display = "none";
-  } else {
-    editMode.display = "none";
-  }
 
   const onChangeCustomCategory = (e) => {
     setCustomCategory(e.target.value);
@@ -79,17 +53,13 @@ const TodoItem = (props) => {
 
   return (
     <li className={styles.item} data-type="todo-item" style={dueSoonStyle}>
-      <div onDoubleClick={handleEditing} style={viewMode}>
-        <span style={completed ? completedStyle : null}>{title}</span>
+      <div>
         <input
             type="text"
-            style={editMode}
-            className={styles.textInput}
             value={title}
             onChange={(e) => {
-              props.updateTodoItem(e.target.value, id);
+              props.updateTodoItem({...props.todo, title: e.target.value});
             }}
-            onKeyDown={handleUpdatedDone}
         />   
         <input
             type="checkbox"
@@ -132,14 +102,6 @@ const TodoItem = (props) => {
           <option value="MEDIUM">Medium</option>
           <option value="HIGH">High</option>
         </select>
-        <input
-          type="text"
-          style={editMode}
-          className={styles.textInput}
-          value={title}
-          onChange={(e) => { props.updateTodoItem(e.target.value, id); }}
-          onKeyDown={handleUpdatedDone}
-        />
         <DatePicker
             selected={dueDate ? new Date(dueDate) : null}
             onChange={handleDateChange}
