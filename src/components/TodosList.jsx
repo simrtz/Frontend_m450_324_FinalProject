@@ -8,7 +8,7 @@ const priorityOrder = { HIGH: 1, MEDIUM: 2, LOW: 3 };
 
 const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, categories, setCategories}) =>{ 
   const [order, setOrder] = useState("highToLow")
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("Work")
 
   const filteredTodos = todos
       .sort((a, b) => {
