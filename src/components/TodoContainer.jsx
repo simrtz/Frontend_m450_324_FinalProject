@@ -12,6 +12,7 @@ const TodoContainer = () => {
     "Groceries",
     "Custom"
 ]);
+  const [error, setError] = useState(""); // Fehlerstatus
 
   const fetchTodos = async (firstRun) => {
     const response = await fetch('http://localhost:8080/api/v1/todo', { method: 'GET' });
@@ -22,7 +23,7 @@ const TodoContainer = () => {
       setCategories(
         categories.concat(
           data.filter((todo) => !categories.includes(todo.category))
-          .map((todo) => todo.category)) 
+          .map((todo) => todo.category))
       )
     }
 };
@@ -58,28 +59,46 @@ const TodoContainer = () => {
       completed: false,
       dueDate
     };
-    
-    await fetch('http://localhost:8080/api/v1/todo', { 
-      method: 'POST', 
-      headers: {
-      'Content-Type': 'application/json'
-      }, 
-      body: JSON.stringify(newTodo)  
-    });
-    fetchTodos();
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/todo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newTodo)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server Error: ${response.status}`);
+      }
+      setError("")
+      fetchTodos();
+    } catch (error) {
+      console.error("Fehler beim Hinzufügen des ToDos:", error);
+      setError(`Fehler beim Hinzufügen des ToDos: ${error}`);
+      throw error;
+    }
   };
 
   const updateTodoItem = async (updatedTodo) => {
-    await fetch(`http://localhost:8080/api/v1/todo/${updatedTodo.id}`, 
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/todo/${updatedTodo.id}`,
       {
-        method: 'PUT', 
+        method: 'PUT',
         headers: {
         'Content-Type': 'application/json'
-        }, 
+        },
         body: JSON.stringify(updatedTodo)
+      });
+      if (!response.ok) {
+        throw new Error(`Server Error: ${response.status}`);
       }
-  );
-    fetchTodos();
+      setError("")
+      fetchTodos();
+    } catch (error) {
+      setError(`Fehler beim Hinzufügen des ToDos: ${error}`);
+      throw error;
+    }
   };
 
   return (
@@ -94,6 +113,8 @@ const TodoContainer = () => {
         categories={categories}
         setCategories={setCategories}
       />
+      {error && <div style={{ color: "red", fontWeight: "bold", marginTop: "10px" }}>{error}</div>}
+
     </div>
   );
 };

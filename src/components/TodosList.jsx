@@ -10,6 +10,18 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
   const [order, setOrder] = useState("highToLow")
   const [category, setCategory] = useState("")
 
+  const filteredTodos = todos
+      .sort((a, b) => {
+        if (order === "highToLow") {
+          return priorityOrder[a.priority] - priorityOrder[b.priority];
+        } else if(order === "lowToHigh") {
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        } else if (order === "byDueDate") {
+          return new Date(a.dueDate) - new Date(b.dueDate);
+        }
+      })
+      .filter((todo) => order !== "byCategory" || todo.category === category);
+
   return(
   <div>
     <div>
@@ -57,25 +69,21 @@ const TodosList = ({todos, handleChangeProps, deleteTodoProps, updateTodoItem, c
       }
     </div>
     <ul data-set="todo-list">
-      {todos.sort((a, b) => {
-        if (order === "highToLow") {
-          return priorityOrder[a.priority] - priorityOrder[b.priority];
-        } else if(order === "lowToHigh") {
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
-        } else if (order === "byDueDate") {
-          return new Date(a.dueDate) - new Date(b.dueDate);
-        }
-      }).map((todo) => { return (order !== "byCategory" || todo.category === category) && (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          handleChangeProps={handleChangeProps}
-          deleteTodoProps={deleteTodoProps}
-          updateTodoItem={updateTodoItem}
-          categories={categories}
-          setCategories={setCategories}
-        />
-      )})}
+      {filteredTodos.length === 0 ? (
+          <h2>Keine ToDos vorhanden, erstelle welche</h2>
+      ) : (
+          filteredTodos.map((todo) => (
+              <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  handleChangeProps={handleChangeProps}
+                  deleteTodoProps={deleteTodoProps}
+                  updateTodoItem={updateTodoItem}
+                  categories={categories}
+                  setCategories={setCategories}
+              />
+          ))
+      )}
     </ul>
   </div>
 )};
