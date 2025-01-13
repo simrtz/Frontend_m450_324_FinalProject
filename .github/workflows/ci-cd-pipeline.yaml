@@ -7,6 +7,7 @@ on:
       - master
 
 jobs:
+  # Lint: Parallel mit Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, ESLint ausführen
   lint:
     runs-on: ubuntu-22.04
     steps:
@@ -22,6 +23,7 @@ jobs:
         run: npm run lint
 
 
+  # Test: Parallel mit Lint, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Tests ausführen
   test:
     runs-on: ubuntu-22.04
     steps:
@@ -36,6 +38,7 @@ jobs:
       - name: Run tests
         run: echo "npm run test"
 
+  # Build: Nach erfolgreichem Lint & Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Anwendung bauen
   build:
     runs-on: ubuntu-22.04
     needs: [test, lint]
@@ -49,8 +52,12 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build application
-        run: echo "npm run build"
-#
+        run: echo npm run build
+
+  # Deploy: Nach erfolgreichem Build, Holt Code,
+  #         richtet Docker Buildx ein (für Multi-Architektur-Builds), aktiviert QEMU (emulierte Plattformen),
+  #         meldet sich bei DockerHub an,
+  #         baut Docker-Image basierend auf dem aktuellen Kontext und pushed es mit Tag `latest` zu DockerHub
   deploy:
     runs-on: ubuntu-22.04
     needs: build
