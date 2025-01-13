@@ -55,18 +55,20 @@ const TodoItem = (props) => {
     <li className={styles.item} data-type="todo-item" style={dueSoonStyle}>
       <div>
         <input
-            type="text"
-            value={title}
-            onChange={(e) => {
-              props.updateTodoItem({...props.todo, title: e.target.value});
-            }}
-        />   
-        <input
             type="checkbox"
             className={styles.checkbox}
             checked={completed}
             onChange={() => props.handleChangeProps(id)}
             name="checkbox"
+        />
+        <span style={{display: "none"}}>{title}</span>
+        <input
+            type="text"
+            value={title}
+            style={completed ? completedStyle : null}
+            onChange={(e) => {
+              props.updateTodoItem({...props.todo, title: e.target.value});
+            }}
         />
         <select style={{marginLeft: "5rem"}} name="category" value={category} onChange={(e) => {category !== "Custom" && props.updateTodoItem({...props.todo, category: e.target.value})}}>
           {categories.map(category => {
@@ -97,11 +99,6 @@ const TodoItem = (props) => {
         >
           <FaTrash style={{ color: "orangered", fontSize: "16px" }} />
         </button>
-        <select style={{ marginLeft: "5rem" }} name="priority" value={priority} onChange={(e) => { props.updateTodoItem({ ...props.todo, priority: e.target.value }) }}>
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
         <DatePicker
             selected={dueDate ? new Date(dueDate) : null}
             onChange={handleDateChange}

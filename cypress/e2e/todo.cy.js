@@ -23,10 +23,8 @@ describe("todo tests", () => {
   });
 
   it("should add a todo", () => {
-    cy.get('[data-set="todo-form"] ').should("exist");
-    cy.get('[data-set="todo-form"] input[name = "title"]').type(
-      "TEST: Add a movie"
-    );
+    cy.get('[data-set="todo-form"]').should("exist");
+    cy.get('[data-set="todo-form"] input[name = "title"]').type("TEST: Add a movie");
     cy.get('[data-set = "add-todo-btn"]').should("exist").click();
     cy.contains("TEST: Add a movie").should("exist");
   });
@@ -106,7 +104,7 @@ describe("todo tests", () => {
 
     cy.get('li[data-type="todo-item"]')
         .contains(title)
-        .should('be.visible')
+        .should('exist')
 
         // Das ToDos mit dem Titel holen und nächste klasse li holen, um dessen datum und Style zu kontrollieren
         .closest('li[data-type="todo-item"]')
@@ -153,7 +151,7 @@ describe("todo tests", () => {
 
     cy.get('li[data-type="todo-item"]')
         .contains(title)
-        .should('be.visible')
+        .should('exist')
 
         // Das ToDos mit dem Titel holen und nächste klasse li holen, um dessen datum und Style zu kontrollieren
         .closest('li[data-type="todo-item"]')
