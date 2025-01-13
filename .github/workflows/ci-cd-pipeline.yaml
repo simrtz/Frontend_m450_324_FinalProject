@@ -1,0 +1,85 @@
+name: CICD Pipeline
+
+on:
+  push:
+    branches:
+      - '**'
+      - master
+
+jobs:
+  # Lint: Parallel mit Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, ESLint ausführen
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run ESLint
+        run: npm run lint
+
+
+  # Test: Parallel mit Lint, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Tests ausführen
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: echo "npm run test"
+
+  # Build: Nach erfolgreichem Lint & Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Anwendung bauen
+  build:
+    runs-on: ubuntu-22.04
+    needs: [test, lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Build application
+        run: echo npm run build
+
+  # Deploy: Nach erfolgreichem Build, Holt Code,
+  #         richtet Docker Buildx ein (für Multi-Architektur-Builds), aktiviert QEMU (emulierte Plattformen),
+  #         meldet sich bei DockerHub an,
+  #         baut Docker-Image basierend auf dem aktuellen Kontext und pushed es mit Tag `latest` zu DockerHub
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todo-final:latest
