@@ -7,6 +7,7 @@ on:
       - master
 
 jobs:
+
   # Lint: Parallel mit Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, ESLint ausführen
   lint:
     runs-on: ubuntu-22.04
@@ -22,7 +23,6 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-
   # Test: Parallel mit Lint, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Tests ausführen
   test:
     runs-on: ubuntu-22.04
@@ -37,6 +37,20 @@ jobs:
         run: npm install
       - name: Run tests
         run: npx jest
+
+#  # Cypress: Parallel mit Lint, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, E2E Cypress Tests ausführen
+#  cypress:
+#    runs-on: ubuntu-24.04
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      # Install npm dependencies, cache them correctly
+#      # and run all Cypress tests
+#      - name: Cypress run
+#        uses: cypress-io/github-action@v6
+#        with:
+#          build: npm run build
+#          start: npm run dev
 
   # Build: Nach erfolgreichem Lint & Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Anwendung bauen
   build:
