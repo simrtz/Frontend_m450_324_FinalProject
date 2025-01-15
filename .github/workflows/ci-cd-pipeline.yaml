@@ -18,8 +18,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run ESLint
         run: npm run lint
 
@@ -33,12 +40,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run tests
         run: npx jest
 
-#  # Cypress: Parallel mit Lint, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, E2E Cypress Tests ausführen
+#  # Cypress: Does not works because of backend not running
 #  cypress:
 #    runs-on: ubuntu-24.04
 #    steps:
@@ -63,8 +77,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm # speicherort für cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Build application
         run: npm run build
 
