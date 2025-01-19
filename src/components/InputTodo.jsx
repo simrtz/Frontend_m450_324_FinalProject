@@ -67,49 +67,49 @@ const InputTodo = ({addTodoProps, categories, setCategories}) => {
   };
 
   return (
-    <form
-      data-set="todo-form"
-      onSubmit={handleSubmit}
-      className="form-container"
-    >
-      <input
-        type="text"
-        className="input-text"
-        placeholder="Add todo..."
-        value={input.title}
-        name="title"
-        onChange={onChange}
-      />
-      <select name="category" onChange={onChange}>
-        {categories.map(category => {
-          return <option value={category}>{category}</option>
-        })}
-      </select>
-      {input.category === "Custom" && <input
-        type="text"
-        className="input-text"
-        placeholder="New Category..."
-        value={customCategory}
-        name="category"
-        onChange={onChangeCustomCategory}
-      />}
-      <select name="priority" onChange={onChange}>
-        <option value="LOW">Low</option>
-        <option value="MEDIUM">Medium</option>
-        <option value="HIGH">High</option>
-      </select>
-      <DatePicker
-          selected={input.dueDate}
-          onChange={handleDateChange}
-          showTimeSelect
-          dateFormat="dd.MM.yyyy HH:mm"
-          placeholderText="Datum auswählen"
-          showIcon={true}
-      />
-      <button data-set="add-todo-btn" className="input-submit">
-        <FaPlusCircle />
-      </button>
-    </form>
+      <form
+          data-set="todo-form"
+          onSubmit={handleSubmit}
+          className="form-container"
+      >
+        <input
+            type="text"
+            className="input-text"
+            placeholder="Add todo..."
+            value={input.title}
+            name="title"
+            onChange={onChange}
+        />
+        <select name="category" onChange={onChange} aria-label="category" data-testid="category-select">
+          {categories.map((category, index) => {
+            return <option key={index} value={category}>{category}</option>
+          })}
+        </select>
+        {input.category === "Custom" && <input
+            type="text"
+            className="input-text"
+            placeholder="New Category..."
+            value={customCategory}
+            name="category"
+            onChange={onChangeCustomCategory}
+        />}
+        <select name="priority" data-testid="priority-select" onChange={onChange}>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+        <DatePicker
+            selected={input.dueDate}
+            onChange={handleDateChange}
+            showTimeSelect
+            dateFormat="dd.MM.yyyy HH:mm"
+            placeholderText="Datum auswählen"
+            showIcon={true}
+        />
+        <button data-set="add-todo-btn" className="input-submit">
+          <FaPlusCircle/>
+        </button>
+      </form>
   );
 };
 
