@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests
-        run: echo "npm run test"
+        run: npx jest
 
   # Build: Nach erfolgreichem Lint & Test, Code holen, Node.js vorbereiten, Abhängigkeiten installieren, Anwendung bauen
   build:
@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build application
-        run: echo npm run build
+        run: npm run build
 
   # Deploy: Nach erfolgreichem Build, Holt Code,
   #         richtet Docker Buildx ein (für Multi-Architektur-Builds), aktiviert QEMU (emulierte Plattformen),
