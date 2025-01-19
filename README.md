@@ -15,7 +15,6 @@ Die CICD-Pipeline in diesem Projekt ist mit github Actions konfiguriert. Die Pip
 Die Pieline beinhaltet Codeüberprüfung, Testen, Bauen der Applikation und Deployment als Docker image in Docker hub. 
 
 ## Übersicht der Pipeline
-![Testpyramide](./Public/cicd.jpg)
 
 ### **1. Lint**
 Lint überprüft den Code auf Einhaltung der definierten Codierstandards und Formatierung von ESLint. <br>
