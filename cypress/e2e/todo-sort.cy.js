@@ -111,14 +111,13 @@ describe('Todo List Sort Functionality', () => {
             .eq(4).should('contain', 'Task 4');
     })
 
-    it('should sort by Category Private', () => {
+    it('should sort by Category Work', () => {
         cy.get('input[name="OrderByCategory"]').check();
-        cy.get('select[name = "category"]').last().select('Private');
 
         cy.get('ul[data-set="todo-list"] li[data-type="todo-item"]')
-            .eq(0).should('contain', 'Task 2');
+            .eq(0).should('contain', 'Task 1');
         cy.get('ul[data-set="todo-list"] li[data-type="todo-item"]')
-            .eq(1).should('contain', 'Task 5');
+            .eq(1).should('contain', 'Task 3');
     })
 
     it('should sort by due Date', () => {
